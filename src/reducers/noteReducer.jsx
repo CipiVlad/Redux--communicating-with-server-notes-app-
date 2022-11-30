@@ -1,9 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import noteService from '../services/notes'
 
-// const generateId = () =>
-//     Number(Math.random() * 1000000).toFixed(0)
-
 const noteSlice = createSlice({
     name: 'notes',
     initialState: [],
@@ -24,10 +21,15 @@ const noteSlice = createSlice({
         },
         setNotes(state, action) {
             return action.payload
+        },
+        removeNote(state, action) {
+            const { id } = action.payload
+            const deleteById = state.notes.filter(n => n.id !== id)
+            state.notes = deleteById
         }
     }
 })
-export const { toggleImportanceOf, appendNote, setNotes } = noteSlice.actions
+export const { toggleImportanceOf, appendNote, setNotes, removeNote } = noteSlice.actions
 
 export const initializeNotes = () => {
     return async dispatch => {
@@ -40,6 +42,13 @@ export const createNote = content => {
     return async dispatch => {
         const newNote = await noteService.createNew(content)
         dispatch(appendNote(newNote))
+    }
+}
+
+export const deleteNote = id => {
+    return async dispatch => {
+        const deleteNote = await noteService.destroyNote(id)
+        dispatch(removeNote(deleteNote))
     }
 }
 

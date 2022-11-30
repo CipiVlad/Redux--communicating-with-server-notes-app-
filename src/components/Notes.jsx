@@ -1,12 +1,16 @@
 import { useDispatch, useSelector } from "react-redux"
-import { toggleImportanceOf } from "../reducers/noteReducer"
+import { toggleImportanceOf, removeNote } from "../reducers/noteReducer"
 
-const Note = ({ note, handleClick }) => {
+const Note = ({ note, handleClick, deleteNote }) => {
   return (
-    <li onClick={handleClick}>
-      {note.content}
-      <strong>{note.important ? ' important' : ''}</strong>
-    </li>
+    <>
+      <li onClick={handleClick}>
+        {note.content}
+        <strong>{note.important ? ' important' : ''}</strong>
+      </li>
+      <button onClick={deleteNote}>X</button>
+    </>
+
   )
 }
 
@@ -30,6 +34,7 @@ const Notes = () => {
           handleClick={() =>
             dispatch(toggleImportanceOf(note.id))
           }
+          deleteNote={() => dispatch(removeNote({ id: note.id }))}
         />
       )}
     </ul>
